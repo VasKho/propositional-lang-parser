@@ -29,7 +29,7 @@ export class Parser {
   constructor() {
     this._lexer = new Lexer();
     this._sym_table = new SymTable();
-    this._res_struct = new AST(new AST_NODE("", null));
+    this._res_struct = new AST(new AST_NODE({ value : "", type: 0 }, null));
     this._size = 0;
   }
 
@@ -42,7 +42,7 @@ export class Parser {
       let direction = (this._res_struct.current_node.left == null) ? NODE.LEFT : NODE.RIGHT;
       switch (current_token.type) {
         case TOKENS.LPAREN: {
-          this._res_struct.buildBlock(new AST_NODE("", this._res_struct.current_node), direction);
+          this._res_struct.buildBlock(new AST_NODE({ value: "", type: 0 }, this._res_struct.current_node), direction);
           break;
         }
         case TOKENS.RPAREN: {
@@ -51,7 +51,7 @@ export class Parser {
         }
         case TOKENS.SYMB: {
           this._sym_table.addSymbol(current_token.value);
-          this._res_struct.buildSymbol(new AST_NODE(current_token.value, this._res_struct.current_node), direction);
+          this._res_struct.buildSymbol(new AST_NODE({ value: current_token.value, type: TOKENS.SYMB}, this._res_struct.current_node), direction);
           break;
         }
         case TOKENS.OPERATION: {
@@ -61,6 +61,7 @@ export class Parser {
       }
     }
     if (this._res_struct.current_node != this._res_struct.root) throw "Syntax error";
+    if (this._res_struct.current_node.left.content.type == 0) throw "Syntax error";
   }
 
   print(root: AST_NODE, space: number) {
@@ -70,7 +71,7 @@ export class Parser {
     console.log("");
     let out = "";
     for (let i = 5; i < space; ++i) out += " ";
-    out += root.content;
+    out += root.content.value;
     console.log(out);
     this.print(root.left, space);
   }

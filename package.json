@@ -8,8 +8,8 @@
     },
     "main": "./out/main",
     "scripts": {
-        "compile": "tsc",
-        "test": ""
+        "compile": "tsc -p ./src",
+        "test": "tsc -p ./tests && node ./out/tests.js"
     },
     "author": "VasKho",
     "license": "GPL-3.0-or-later",

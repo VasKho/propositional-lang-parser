@@ -1,22 +1,24 @@
+import { TOKENS } from "./lexer";
+
 export enum NODE {
   LEFT = 0,
   RIGHT
 };
 
 export class AST_NODE {
-  protected _content: string;
+  protected _content: {value: string, type: number};
   protected _parent: AST_NODE;
   protected _left: AST_NODE;
   protected _right: AST_NODE;
 
-  constructor(c: string, parent: AST_NODE) {
+  constructor(c: {value: string, type: number}, parent: AST_NODE) {
     this.content = c;
     this._parent = parent;
     this._left = null;
     this._right = null;
   }
 
-  set content(c: string) { this._content = c; }
+  set content(c: {value: string, type: number}) { this._content = c; }
 
   get content() { return this._content; }
 
@@ -61,7 +63,7 @@ export class AST {
   }
 
   buildOperation(value: string) {
-    this.current_node.content = value;
+    this.current_node.content = { value: value, type: TOKENS.OPERATION };
   }
 
   buildSymbol(node: AST_NODE, direction: NODE) {
