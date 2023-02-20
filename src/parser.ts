@@ -33,7 +33,9 @@ export class Parser {
     this._size = 0;
   }
 
-  get AST() { return this._res_struct.current_node; }
+  get AST() { return this._res_struct.current_node.left; }
+
+  get symTable() { return this._sym_table; }
 
   parseStruct(input: string) {
     let token_list = this._lexer.splitInput(input);
@@ -60,8 +62,9 @@ export class Parser {
         }
       }
     }
-    if (this._res_struct.current_node != this._res_struct.root) throw "Syntax error";
-    if (this._res_struct.current_node.left.content.type == 0) throw "Syntax error";
+    if (this._res_struct.root.content.value != "") throw "Parenthesis parsing error - syntax error";
+    if (this._res_struct.current_node != this._res_struct.root) throw "Parenthesis parsing error - syntax error";
+    if (this._res_struct.current_node.left.content.type == 0) throw "Extra parenthesis - syntax error";
   }
 
   print(root: AST_NODE, space: number) {

@@ -52,7 +52,7 @@ export class Lexer {
         }
       }
     }
-    if (buff != "") throw "Syntax error";
+    if (buff != "") throw (buff as string) + ": syntax error - bad name";
     return res;
   }
 }
