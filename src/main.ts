@@ -10,7 +10,7 @@ while (true) {
   parser.parseStruct(input);
   parser.print(parser.AST, 0);
   let analyzer = new PCNFAnalyzer();
-  if (analyzer.check(parser.AST, true) == true) {
+  if (analyzer.check(parser.AST, parser.symTable) == true) {
     console.log("PASS");
   } else console.log("FAIL");
 }

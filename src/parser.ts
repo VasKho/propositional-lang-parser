@@ -1,20 +1,27 @@
 import { Lexer, TOKENS } from "./lexer"
 import { NODE, AST, AST_NODE } from "./ast"
 
-class SymTable {
-  private _symbols: string[];
+export class SymTable {
+  protected _symbols: Set<string>;
   
   constructor() {
-    this._symbols = [];
+    this._symbols = new Set();
   }
 
-  addSymbol(s: string) {
-    this._symbols.push(s);
+  addSymbol(symb: string) {
+    this._symbols.add(symb);
   }
 
-  compareSymbols(syms: string[]) {
-    for (const i of this._symbols) {
-      if (syms.indexOf(i) === -1) return false;
+  compare(symbs: string[]) : boolean {
+    let tmp_symbs = new Array<string>();
+    let tmp_item: string;
+    for (let item of symbs) {
+      tmp_item = item.replace(/!/gi, "");
+      if (tmp_symbs.includes(tmp_item)) return false;
+      tmp_symbs.push(tmp_item);
+    }
+    for (let item of this._symbols.values()) {
+      if (!tmp_symbs.includes(item)) return false;
     }
     return true;
   }
