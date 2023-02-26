@@ -1,4 +1,4 @@
-import { TOKENS } from "./lexer";
+import { TOKENS, OPS } from "./lexer";
 import { AST_NODE } from "./ast";
 import { SymTable } from "./parser";
 
@@ -32,39 +32,53 @@ export class PCNFAnalyzer {
     return true;
   }
   
-  protected checkCNF(structRoot: AST_NODE, inserter: number, allowConjunction: boolean) : boolean {
-    if (structRoot === null) return true;
+  protected checkCNF(structRoot: AST_NODE, inserter: number, allowConjunction: boolean, start = false) : boolean {
+    if (structRoot === null) return !start;
     let left_inserter = inserter, right_inserter = inserter;
-    if (structRoot.content.type == TOKENS.SYMB) {
-      if (this._symb_arr.length == 0) this._symb_arr.push(new Array<string>);
-      if (structRoot.parent.content.value == "!") {
-	if (!this.addSymb("!"+structRoot.content.value, inserter)) return false;
-      } else if (!this.addSymb(structRoot.content.value, inserter)) return false;
-    }
-    if (structRoot.content.value == "*") {
-      if (!allowConjunction) return false;
-      if (structRoot.left.content.value == "*" && structRoot.right.content.value == "*") return false;
-      if (structRoot.left.content.value != "*") {
-	this._symb_arr.push(new Array<string>());
-	left_inserter = this._symb_arr.length - 1;
+    switch (structRoot.content.type) {
+      case TOKENS.OPERATION: {
+	switch (structRoot.content.value) {
+	  case OPS.IMPL: { return false; }
+	  case OPS.EQL: { return false; }
+	  case OPS.NEG: {
+	    if (structRoot.left.content.type != TOKENS.SYMB) {
+	      return false;
+	    }
+	    break;
+	  }
+	  case OPS.CONJ: {
+	    if (!allowConjunction) return false;
+	    if (structRoot.left.content.value == "/\\" && structRoot.right.content.value == "/\\") return false;
+	    if (structRoot.left.content.value != "/\\") {
+	      this._symb_arr.push(new Array<string>());
+	      left_inserter = this._symb_arr.length - 1;
+	    }
+	    if (structRoot.right.content.value != "/\\") {
+	      this._symb_arr.push(new Array<string>());
+	      right_inserter = this._symb_arr.length - 1;
+	    }
+	    break;
+	  }
+	}
+	break;
       }
-      if (structRoot.right.content.value != "*") {
-	this._symb_arr.push(new Array<string>());
-	right_inserter = this._symb_arr.length - 1;
+      case TOKENS.SYMB: {
+	if (this._symb_arr.length == 0) this._symb_arr.push(new Array<string>);
+	if (structRoot.parent.content.value == "!") {
+	  if (!this.addSymb("!" + structRoot.content.value, inserter)) return false;
+	} else if (!this.addSymb(structRoot.content.value, inserter)) return false;
+	break;
       }
-    }
-    if (structRoot.content.value == "!" && structRoot.left.content.type != TOKENS.SYMB) {
-      return false;
     }
     let left = true, right = true;
-    allowConjunction = (structRoot.content.value == "*");
+    allowConjunction = (structRoot.content.value == "/\\");
     left = this.checkCNF(structRoot.left, left_inserter, allowConjunction);
     right = this.checkCNF(structRoot.right, right_inserter, allowConjunction);
     return left && right;
   }
 
   check(structRoot: AST_NODE, symTable: SymTable) : boolean {
-    let res1 = this.checkCNF(structRoot, 0, true);
+    let res1 = this.checkCNF(structRoot, 0, true, true);
     let res2 = this.checkSyms(symTable);
     this._symb_arr = new Array();
     return res1 && res2;

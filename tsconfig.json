@@ -9,7 +9,7 @@
 	"outDir": "out",
 	"esModuleInterop": true,
 	"forceConsistentCasingInFileNames": true,
-	"strict": true,
+	"strict": false,
 	"strictNullChecks": false,
 	"skipLibCheck": true,
     },

@@ -7,10 +7,14 @@ while (true) {
   console.log(input);
   let parser = new Parser();
 
-  parser.parseStruct(input);
-  parser.print(parser.AST, 0);
-  let analyzer = new PCNFAnalyzer();
-  if (analyzer.check(parser.AST, parser.symTable) == true) {
-    console.log("PASS");
-  } else console.log("FAIL");
+  try {
+    parser.parseStruct(input);
+    parser.print(parser.AST, 0);
+    let analyzer = new PCNFAnalyzer();
+    if (analyzer.check(parser.AST, parser.symTable) == true) {
+      console.log("PASS");
+    } else console.log("FAIL");
+  } catch (e) {
+    console.log(e);
+  }
 }

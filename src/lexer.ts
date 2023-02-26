@@ -5,18 +5,10 @@ export enum TOKENS {
   RPAREN
 };
 
-export enum OPS {
-  CONJ = "*",
-  DISJ = "+",
-  NEG = "!"
-};
-
 const ALPH = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 	      'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1'];
 
-const OPS_ARR = ['/\\', '\\/', '!'];
-
-const OPS_TRANS = [OPS.CONJ, OPS.DISJ, OPS.NEG];
+export const OPS = { CONJ: '/\\', DISJ: '\\/', NEG: '!', IMPL: '->', EQL: '~' };
 
 export class Lexer {
   constructor() { }
@@ -28,12 +20,12 @@ export class Lexer {
     for (let i = 0; i < input.length; ++i) {
       if (input[i] == '(') {
         res.push({
-          value: "",
+          value: "(",
           type: TOKENS.LPAREN
         });
       } else if (input[i] == ')') {
         res.push({
-          value: "",
+          value: ")",
           type: TOKENS.RPAREN
         });
       } else if (ALPH.indexOf(input[i]) != -1) {
@@ -43,16 +35,19 @@ export class Lexer {
         });
       } else {
         buff = buff.concat(input[i]);
-        if (OPS_ARR.indexOf(buff) != -1) {
-          res.push({
-            value: OPS_TRANS[OPS_ARR.indexOf(buff)],
-            type: TOKENS.OPERATION
-          });
-          buff = "";
-        }
+	for(let key in OPS) {
+	  let value: string = OPS[key];
+	  if (buff === value) {
+	    res.push({
+              value: buff,
+              type: TOKENS.OPERATION
+            });
+            buff = "";
+	  }
+	}
       }
     }
-    if (buff != "") throw (buff as string) + ": syntax error - bad name";
+    if (buff != "") throw (buff as string) + ": syntax error - bad name ";
     return res;
   }
 }

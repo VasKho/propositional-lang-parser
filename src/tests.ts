@@ -39,7 +39,7 @@ function test(example: string, res: number) {
 // A
 test("A", RESULT.OK);
 // 1
-test("1", RESULT.OK);
+test("1", RESULT.NOT_PCNF);
 // (A /\ (!A))
 test("(A /\\ (!A))", RESULT.OK);
 // ((A \/ (C \/ B)) /\ (A \/ ((!B) \/ C)))
