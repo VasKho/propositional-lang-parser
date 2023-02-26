@@ -48,12 +48,12 @@ export class PCNFAnalyzer {
 	  }
 	  case OPS.CONJ: {
 	    if (!allowConjunction) return false;
-	    if (structRoot.left.content.value == "/\\" && structRoot.right.content.value == "/\\") return false;
-	    if (structRoot.left.content.value != "/\\") {
+	    if (structRoot.left.content.value == OPS.CONJ && structRoot.right.content.value == OPS.CONJ) return false;
+	    if (structRoot.left.content.value != OPS.CONJ) {
 	      this._symb_arr.push(new Array<string>());
 	      left_inserter = this._symb_arr.length - 1;
 	    }
-	    if (structRoot.right.content.value != "/\\") {
+	    if (structRoot.right.content.value != OPS.CONJ) {
 	      this._symb_arr.push(new Array<string>());
 	      right_inserter = this._symb_arr.length - 1;
 	    }
@@ -64,14 +64,15 @@ export class PCNFAnalyzer {
       }
       case TOKENS.SYMB: {
 	if (this._symb_arr.length == 0) this._symb_arr.push(new Array<string>);
-	if (structRoot.parent.content.value == "!") {
-	  if (!this.addSymb("!" + structRoot.content.value, inserter)) return false;
+	if (structRoot.content.value == "0" || structRoot.content.value == "1") return false;
+	if (structRoot.parent.content.value == OPS.NEG) {
+	  if (!this.addSymb(OPS.NEG + structRoot.content.value, inserter)) return false;
 	} else if (!this.addSymb(structRoot.content.value, inserter)) return false;
 	break;
       }
     }
     let left = true, right = true;
-    allowConjunction = (structRoot.content.value == "/\\");
+    allowConjunction = (structRoot.content.value == OPS.CONJ);
     left = this.checkCNF(structRoot.left, left_inserter, allowConjunction);
     right = this.checkCNF(structRoot.right, right_inserter, allowConjunction);
     return left && right;
