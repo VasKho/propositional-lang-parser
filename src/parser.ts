@@ -3,6 +3,8 @@ import { NODE, AST, AST_NODE } from "./ast"
 
 export class SymTable {
   protected _symbols: Set<string>;
+
+  get symbols() { return this._symbols; }
   
   constructor() {
     this._symbols = new Set();
@@ -36,7 +38,7 @@ export class Parser {
   constructor() {
     this._lexer = new Lexer();
     this._sym_table = new SymTable();
-    this._res_struct = new AST(new AST_NODE({ value : "", type: 0 }, null));
+    this._res_struct = new AST();
     this._size = 0;
   }
 
@@ -45,11 +47,11 @@ export class Parser {
   get symTable() { return this._sym_table; }
 
   protected parseLparen(next_token: { value: string, type: number }) {
-    let direction = (this._res_struct.current_node.left == null) ? NODE.LEFT : NODE.RIGHT;
     if (next_token != undefined && next_token.type == TOKENS.RPAREN) {
       throw "Parsing error at: ()";
     }
-    this._res_struct.buildBlock(new AST_NODE({ value: "(", type: TOKENS.LPAREN }, this._res_struct.current_node), direction);
+    let direction = (this._res_struct.current_node.left == null) ? NODE.LEFT : NODE.RIGHT;
+    this._res_struct.buildBlock(direction);
   }
 
   protected parseRparen(next_token: { value: string, type: number }) {
@@ -60,12 +62,12 @@ export class Parser {
   }
 
   protected parseSymb(current_token: { value: string, type: number }, next_token: { value: string, type: number }) {
-    let direction = (this._res_struct.current_node.left == null) ? NODE.LEFT : NODE.RIGHT;
     if (next_token != undefined && next_token.type == TOKENS.SYMB) {
       throw "Parsing error at: " + current_token.value + next_token.value;
     }
-    this._sym_table.addSymbol(current_token.value);
-    this._res_struct.buildSymbol(new AST_NODE({ value: current_token.value, type: TOKENS.SYMB}, this._res_struct.current_node), direction);
+    let direction = (this._res_struct.current_node.left == null) ? NODE.LEFT : NODE.RIGHT;
+    if (!['0', '1'].includes(current_token.value)) this._sym_table.addSymbol(current_token.value);
+    this._res_struct.buildSymbol(current_token.value, direction);
   }
 
   protected parseOperation(current_token: { value: string, type: number }, next_token: { value: string, type: number }) {

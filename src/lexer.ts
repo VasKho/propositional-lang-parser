@@ -5,7 +5,7 @@ export enum TOKENS {
   RPAREN
 };
 
-const ALPH = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+export const ALPH = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 	      'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1'];
 
 export const OPS = { CONJ: '/\\', DISJ: '\\/', NEG: '!', IMPL: '->', EQL: '~' };

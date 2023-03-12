@@ -40,23 +40,23 @@ function test(example: string, res: number) {
 test("A", RESULT.OK);
 // 1
 test("1", RESULT.NOT_PCNF);
-// (A /\ (!A))
-test("(A /\\ (!A))", RESULT.OK);
-// ((A \/ (C \/ B)) /\ (A \/ ((!B) \/ C)))
-test("((A \\/ (C \\/ B)) /\\ (A \\/ ((!B) \\/ C)))", RESULT.OK);
-// ((E \/ (T \/ (!G))) /\ ((!G) \/ ((!T) \/ E)))
-test("((E \\/ (T \\/ (!G))) /\\ ((!G) \\/ ((!T) \\/ E)))", RESULT.OK);
-// ((A \/ (B \/ (!A))) /\ (A \/ B))
-test("((A \\/ (B \\/ (!A))) /\\ (A \\/ B))", RESULT.NOT_PCNF);
-// ((A \/ B) /\ C)
-test("((A \\/ B) /\\ C)", RESULT.NOT_PCNF);
-// ((A \/ ((!B) \/ (!C))) /\ ((!D) \/ (E \/ F)))
-test("((A \\/ ((!B) \\/ (!C))) /\\ ((!D) \\/ (E \\/ F)))", RESULT.NOT_PCNF);
-// (((((A \/ B) \/ ((!A) \/ B)) /\ (A \/ (!B))) /\ ((A \/ B) \/ C)) /\ (((!A) \/ B) \/ (A \/ B)))
-test("(((((A \\/ B) \\/ ((!A) \\/ B)) /\\ (A \\/ (!B))) /\\ ((A \\/ B) \\/ C)) /\\ (((!A) \\/ B) \\/ (A \\/ B)))", RESULT.NOT_PCNF);
-// (A \/ (B \/ C)) /\ (A \/ ((!B) \/ C))
-test("(A \\/ (B \\/ C)) /\\ (A \\/ ((!B) \\/ C))", RESULT.SYNTAX_ERROR);
-// ((A /\ B) \/ ((A \/ B) /\ (A \/ B)))
-test("((A /\\ B) \\/ ((A \\/ B) /\\ (A \\/ B)))", RESULT.NOT_PCNF);
-// (!(B \/ C))
-test("(!(B \\/ C))", RESULT.NOT_PCNF);
+// (A/\(!A))
+test("(A/\\(!A))", RESULT.OK);
+// ((A\/(C\/B))/\(A\/((!B)\/C)))
+test("((A\\/(C\\/B))/\\(A\\/((!B)\\/C)))", RESULT.OK);
+// ((E\/(T\/(!G)))/\((!G)\/((!T)\/E)))
+test("((E\\/(T\\/(!G)))/\\((!G)\\/((!T)\\/E)))", RESULT.OK);
+// ((A\/(B\/(!A)))/\(A\/B))
+test("((A\\/(B\\/(!A)))/\\(A\\/B))", RESULT.NOT_PCNF);
+// ((A\/B)/\C)
+test("((A\\/B)/\\C)", RESULT.NOT_PCNF);
+// ((A\/((!B)\/(!C)))/\((!D)\/(E\/F)))
+test("((A\\/((!B)\\/(!C)))/\\((!D)\\/(E\\/F)))", RESULT.NOT_PCNF);
+// (((((A\/B)\/((!A)\/B))/\(A\/(!B)))/\((A\/B)\/C))/\(((!A)\/B)\/(A\/B)))
+test("(((((A\\/B)\\/((!A)\\/B))/\\(A\\/(!B)))/\\((A\\/B)\\/C))/\\(((!A)\\/B)\\/(A\\/B)))", RESULT.NOT_PCNF);
+// (A\/(B\/C))/\(A\/((!B)\/C))
+test("(A\\/(B\\/C))/\\(A\\/((!B)\\/C))", RESULT.SYNTAX_ERROR);
+// ((A/\B)\/((A\/B)/\(A\/B)))
+test("((A/\\B)\\/((A\\/B)/\\(A\\/B)))", RESULT.NOT_PCNF);
+// (!(B\/C))
+test("(!(B\\/C))", RESULT.NOT_PCNF);
